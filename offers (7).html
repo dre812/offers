@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Библиотека офферов</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a18;min-height:100vh}
+.page{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+.topbar{padding-bottom:1.25rem;border-bottom:1px solid #e8e8e5;margin-bottom:1.25rem}
+.topbar h1{font-size:22px;font-weight:500}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem}
+.fbtn{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid #ddd;background:#fff;color:#666;cursor:pointer;font-family:inherit;transition:all .15s}
+.fbtn:hover{border-color:#aaa;color:#1a1a18}
+.fbtn.on{background:#1a1a18;color:#fff;border-color:#1a1a18}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.card{background:#fff;border:1px solid #e8e8e5;border-radius:14px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.card:hover{border-color:#bbb}
+.thumb{width:100%;height:130px;background:#efefec;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb-ph{width:36px;height:36px;opacity:.15;position:absolute;pointer-events:none}
+.badge{position:absolute;top:8px;left:8px;font-size:11px;font-weight:500;padding:2px 8px;border-radius:10px}
+.b-smartlink{background:#EEEDFE;color:#3C3489}
+.b-epicwin{background:#E1F5EE;color:#085041}
+.b-ecommerce{background:#FAEEDA;color:#633806}
+.b-igaming{background:#FAECE7;color:#712B13}
+.cbody{padding:12px}
+.ctitle{font-size:13px;font-weight:500;color:#1a1a18;margin-bottom:6px;line-height:1.4;word-break:break-word}
+.crow{display:flex;justify-content:space-between;margin-bottom:4px;gap:8px}
+.cl{font-size:12px;color:#aaa;white-space:nowrap}
+.cv{font-size:12px;color:#1a1a18;text-align:right;word-break:break-word}
+.sep{height:1px;background:#f0f0ed;margin:8px 0}
+.rtm{width:100%;border-collapse:collapse;margin-top:2px}
+.rtm td{font-size:11px;padding:2px 0;vertical-align:top}
+.rtm td:first-child{color:#aaa;width:38px}
+.rtm td:nth-child(2){color:#aaa;width:44px}
+.rtm td:last-child{text-align:right;color:#1a1a18;font-weight:500}
+.list-wrap.hide{display:none}
+.detail-wrap{display:none}
+.detail-wrap.show{display:block}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#aaa;cursor:pointer;padding:.75rem 0 1.25rem;border:none;background:none;font-family:inherit}
+.back:hover{color:#1a1a18}
+.dtitle{font-size:20px;font-weight:500;margin-bottom:1rem;line-height:1.3;word-break:break-word}
+.dmeta{display:flex;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap}
+.dchip{font-size:12px;padding:4px 10px;border-radius:8px;background:#f0f0ed;color:#666}
+.dcomment-block{font-size:13px;color:#666;background:#f8f8f6;border-radius:8px;padding:10px 12px;margin-bottom:1.25rem;white-space:pre-wrap;line-height:1.6}
+.dcomment-block a{color:#4a6cf7;text-decoration:none}
+.dcomment-block a:hover{text-decoration:underline}
+.gallery{border-radius:12px;overflow:hidden;background:#efefec;margin-bottom:1.5rem}
+.gimgwrap{width:100%;height:300px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.gimgwrap img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:none}
+.gimgwrap img.cur{display:block}
+.gph{width:60px;height:60px;opacity:.12}
+.gnav{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid #e8e8e5}
+.gdot{width:6px;height:6px;border-radius:50%;background:#ddd;cursor:pointer;flex-shrink:0}
+.gdot.on{background:#1a1a18}
+.garr{font-size:16px;color:#aaa;cursor:pointer;border:none;background:none;font-family:inherit;padding:2px 6px;line-height:1}
+.garr:hover{color:#1a1a18}
+.gcnt{font-size:12px;color:#aaa;margin-left:auto}
+.slabel{font-size:11px;font-weight:500;color:#aaa;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.rtable{width:100%;border-collapse:collapse;margin-bottom:2rem}
+.rtable th{font-size:12px;font-weight:500;color:#aaa;text-align:left;padding:7px 10px;border-bottom:1px solid #f0f0ed}
+.rtable td{font-size:13px;color:#1a1a18;padding:9px 10px;border-bottom:1px solid #f0f0ed;vertical-align:top}
+.rtable tr:last-child td{border-bottom:none}
+.rtable tr:hover td{background:#fafaf8}
+.no-rates{font-size:13px;color:#aaa;margin-bottom:2rem}
+@media(max-width:600px){
+  .page{padding:1.25rem 1rem}
+  .grid{grid-template-columns:1fr 1fr;gap:10px}
+  .thumb{height:110px}
+  .gimgwrap{height:200px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="list-wrap" id="listWrap">
+    <div class="topbar"><h1>Библиотека офферов</h1></div>
+    <div class="filters" id="filters">
+      <button class="fbtn on" data-cat="all">Все</button>
+      <button class="fbtn" data-cat="In-house smartlink">In-house smartlink</button>
+      <button class="fbtn" data-cat="Epicwin">Epicwin</button>
+      <button class="fbtn" data-cat="Ecommerce">Ecommerce</button>
+      <button class="fbtn" data-cat="iGaming">iGaming</button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+  <div class="detail-wrap" id="detailWrap">
+    <button class="back" id="backBtn">← Все офферы</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+<script>
+const offers = [
+  {
+    "cat": "iGaming",
+    "title": "Jili Kazino (KZ group)",
+    "comment": "",
+    "geo": "PH",
+    "limit": "100$ daily",
+    "previews": [
+      "https://i.ibb.co/xSQv7x2J/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "PH",
+        "model": "FTD",
+        "rate": "10"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "PG Slot Games (KZ group)",
+    "comment": "",
+    "geo": "PK, BD, TH",
+    "limit": "100$ daily",
+    "previews": [
+      "https://i.ibb.co/gGGSSfP/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "TH",
+        "model": "FTD",
+        "rate": "$28"
+      },
+      {
+        "geo": "PK",
+        "model": "FTD",
+        "rate": "$15"
+      },
+      {
+        "geo": "BD",
+        "model": "FTD",
+        "rate": "$18"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Pragmatic Play (KZ group)",
+    "comment": "",
+    "geo": "BR",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/HLPJjLHL/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "BR",
+        "model": "",
+        "rate": "$15"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Joker's Jewels (KZ group)",
+    "comment": "",
+    "geo": "MX",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/SDTYpnk0/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "MX",
+        "model": "",
+        "rate": "$15"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "1x",
+    "comment": "",
+    "geo": "EG, SY, NG, etc",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/tp5VdLWB/image.png"
+    ],
+    "rateCard": []
+  },
+  {
+    "cat": "iGaming",
+    "title": "D88BD, Dhoni88, BABU88, LuckyBangla88",
+    "comment": "",
+    "geo": "BD",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/zW3CQR92/image.png",
+      "https://i.ibb.co/3yfvh2Db/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "BD",
+        "model": "FTD",
+        "rate": "20-25$"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Pin-up",
+    "comment": "",
+    "geo": "AZ UZ",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/607NXGMF/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "AZ",
+        "model": "",
+        "rate": ""
+      },
+      {
+        "geo": "KPI",
+        "model": "",
+        "rate": "reg to 20-30$; dep to 100-120$"
+      },
+      {
+        "geo": "UZ",
+        "model": "",
+        "rate": ""
+      },
+      {
+        "geo": "KPI",
+        "model": "",
+        "rate": "reg to 2$; dep to 35-40$"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "22bet, 20bet, safe casino, bet label",
+    "comment": "",
+    "geo": "AR CA PL AT AU HU",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/21QkCPZN/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "AR CA PL AT AU HU",
+        "model": "FTD",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Betway, B9J, PEPE KE, Jackpot City, Spinci, YesPlay, Winpesa, Mojabet, JSB Sports, 888bets",
+    "comment": "",
+    "geo": "ZA, NG, ZW, MZ, GH, MW, AO, CD, TR, RW, LS, ML, CH, CZ, GN, AR, TZ, ZM, PT, SN, CM, NA, KE, UG, SK, SL, NZ, CO, BG, LV, GB, GA",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/6JGmqWsq/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "ZA, NG, ZW, MZ, GH, MW, AO, CD, TR, RW, LS, ML, CH, CZ, GN, AR, TZ, ZM, PT, SN, CM, NA, KE, UG, SK, SL, NZ, CO, BG, LV, GB, GA",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Betrivers\nBetMGM\nCrownCoins \nHigh 5\nFunrize\nMegabonaza\nStake \nBrazino777\nBr4Bet\n1xbet\nLuvabet\nSuperbet\nBetobet\nTonybet\nRun4WIn \nPlatin Casino\nFavbet",
+    "comment": "",
+    "geo": "IT, BR, US, GB, MX, SE, NG, RO, AR, CA, AL, DE, BD",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/B2dChJCw/image.png",
+      "https://i.ibb.co/PvRx9NWc/image.png",
+      "https://i.ibb.co/N6jw4dML/image.png",
+      "https://i.ibb.co/QF8Rt5V0/image.png"
+    ],
+    "rateCard": []
+  },
+  {
+    "cat": "iGaming",
+    "title": "PremierBet, 888Africa, AfricaBet, Bettson, YesPlay, Lafbet",
+    "comment": "",
+    "geo": "MW ML MZ AO AR GN ZW CM ZA ZM CD VE SV US CG LR ET TZ VN",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/0pW41Y70/image.png",
+      "https://i.ibb.co/HLpMqBH6/image.png",
+      "https://i.ibb.co/dsQqx51k/image.png"
+    ],
+    "rateCard": []
+  },
+  {
+    "cat": "iGaming",
+    "title": "Doradobet, Ecuabet, Stake Colombia, Ganaplay, Paniplay, Camanbet",
+    "comment": "",
+    "geo": "Colombia, Ecuador, Peru, Costa Rica, Nicaragua, Guatemala, El Salvador, Honduras, Chile",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/C5PRjg5D/image.png",
+      "https://i.ibb.co/rK7nSCfM/image.png",
+      "https://i.ibb.co/5gXDVwLC/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "Colombia, Ecuador, Peru, Costa Rica, Nicaragua, Guatemala, El Salvador, Honduras, Chile",
+        "model": "CPA (first deposit) and CPL (lead)",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "pinco/lvlx/pinup",
+    "comment": "",
+    "geo": "AZ/KZ/TJ/RU/NG/KE/CD/AZ",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/6RgDKWf6/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "FTD price:",
+        "model": "",
+        "rate": ""
+      },
+      {
+        "geo": "Kazakhstan",
+        "model": "",
+        "rate": "40-50"
+      },
+      {
+        "geo": "Azerbaijan",
+        "model": "",
+        "rate": "40-50"
+      },
+      {
+        "geo": "Uzbekistan",
+        "model": "",
+        "rate": "20-30"
+      },
+      {
+        "geo": "Kyrgyzstan",
+        "model": "",
+        "rate": "20-25"
+      },
+      {
+        "geo": "Russian",
+        "model": "",
+        "rate": "50"
+      },
+      {
+        "geo": "Australia",
+        "model": "",
+        "rate": "220"
+      },
+      {
+        "geo": "Austria",
+        "model": "",
+        "rate": "220"
+      },
+      {
+        "geo": "Ukraine",
+        "model": "",
+        "rate": "40"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "777, betking, vegas",
+    "comment": "",
+    "geo": "UA",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/cSqhZqjt/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "UA",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "poperloclub.bet",
+    "comment": "",
+    "geo": "AR AZ BR",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/gLDx2xMJ/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "AR AZ BR",
+        "model": "FTD",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Luck Slot",
+    "comment": "",
+    "geo": "KH",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/yBb0Z4xJ/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "KH",
+        "model": "FTD",
+        "rate": "30"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "4rabet",
+    "comment": "",
+    "geo": "IN",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/nMMQwWSJ/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "IN",
+        "model": "FTD",
+        "rate": "50"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Affun",
+    "comment": "",
+    "geo": "MX",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/5XTHbzHS/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "MX",
+        "model": "FTD",
+        "rate": "45"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Betway",
+    "comment": "",
+    "geo": "ZA",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/6JGmqWsq/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "ZA",
+        "model": "FTD",
+        "rate": "40"
+      }
+    ]
+  },
+  {
+    "cat": "In-house smartlink",
+    "title": "Playable | Click Box – Simple",
+    "comment": "iGaming smartlink after preland\n\nhttps://miro.com/app/board/uXjVGvNqzdE=/ тут рабочие воронки в ФБ",
+    "geo": "PH, ID, PK, BD, BR, TH, ZA",
+    "limit": "200$ daily",
+    "previews": [
+      "https://i.ibb.co/H9LVRVD/FSBv-A-ce-QBK4-IW2mg1ra-Sw.png",
+      "https://i.ibb.co/Ld0KwbCF/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "PH",
+        "model": "CPM",
+        "rate": "18"
+      },
+      {
+        "geo": "ID",
+        "model": "CPM",
+        "rate": "8"
+      },
+      {
+        "geo": "PK",
+        "model": "CPM",
+        "rate": "13"
+      },
+      {
+        "geo": "BR",
+        "model": "CPM",
+        "rate": "10"
+      },
+      {
+        "geo": "BD",
+        "model": "CPM",
+        "rate": "13"
+      },
+      {
+        "geo": "ZA",
+        "model": "CPM",
+        "rate": "7"
+      },
+      {
+        "geo": "TH",
+        "model": "CPM",
+        "rate": "13"
+      }
+    ]
+  },
+  {
+    "cat": "In-house smartlink",
+    "title": "Playable | Click Box",
+    "comment": "iGaming smartlink after preland",
+    "geo": "PH, ID, PK, BD, BR, TH, ZA",
+    "limit": "200$ daily",
+    "previews": [
+      "https://i.ibb.co/yBxm7CV2/Xqh-Lp-XRZSM2-K4w7q-In-Ic-Bg.png",
+      "https://i.ibb.co/5WyK1ZGm/DCNp-Lql-ZQ8amf2-H7-Qg-Nu-Ig.png",
+      "https://i.ibb.co/1tY8WwNk/KO8-IJi-ODTJSUgh-Wu-Fi-WIf-A.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "PH",
+        "model": "CPM",
+        "rate": "32"
+      },
+      {
+        "geo": "ID",
+        "model": "CPM",
+        "rate": "13"
+      },
+      {
+        "geo": "PK",
+        "model": "CPM",
+        "rate": "13"
+      },
+      {
+        "geo": "BD",
+        "model": "CPM",
+        "rate": "12"
+      },
+      {
+        "geo": "BR",
+        "model": "CPM",
+        "rate": "13"
+      },
+      {
+        "geo": "ZA",
+        "model": "CPM",
+        "rate": "18"
+      },
+      {
+        "geo": "TH",
+        "model": "CPM",
+        "rate": "23"
+      }
+    ]
+  },
+  {
+    "cat": "In-house smartlink",
+    "title": "Playable | Dream Coin",
+    "comment": "iGaming smartlink after preland",
+    "geo": "PH, ID, PK, BD, BR, TH, ZA",
+    "limit": "200$ daily",
+    "previews": [
+      "https://i.ibb.co/XxnZzDWW/PSSTYId-LQey-Wb-Qlz-TEx-FFA.png",
+      "https://i.ibb.co/MkC8P0Wm/WM39h-Swy-Rq-Rlsr9a-Sk-Sew.png",
+      "https://i.ibb.co/k630cc54/v-S77-BWp-RQay-Go4xe-UJt-ILw.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "PH",
+        "model": "CPM",
+        "rate": "21"
+      },
+      {
+        "geo": "PK",
+        "model": "CPM",
+        "rate": "14"
+      },
+      {
+        "geo": "BD",
+        "model": "CPM",
+        "rate": "7"
+      },
+      {
+        "geo": "TH",
+        "model": "CPM",
+        "rate": "13"
+      },
+      {
+        "geo": "ID",
+        "model": "CPM",
+        "rate": "6"
+      },
+      {
+        "geo": "BR",
+        "model": "CPM",
+        "rate": "10"
+      },
+      {
+        "geo": "ZA",
+        "model": "CPM",
+        "rate": "5"
+      }
+    ]
+  },
+  {
+    "cat": "In-house smartlink",
+    "title": "Click Box Africa",
+    "comment": "Betway ZA after preland",
+    "geo": "ZA",
+    "limit": "200$ daily",
+    "previews": [
+      "https://i.ibb.co/tk2Ysg9/h-BSRNSo-TREu9h-GSN-OZr-CA.png",
+      "https://i.ibb.co/s9N1z3TY/Gyb-Yx-Lc-ET-G5-VNw-Zi-VX9t-Q.png",
+      "https://i.ibb.co/zWFVY4DF/tq-HG0-Kz-SPmzibo-QVGIMgg.png",
+      "https://i.ibb.co/PstFNFN3/HA9-KO-Q6-QQe0-N4cdknk-CYA.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "ZA",
+        "model": "CPM",
+        "rate": "50"
+      }
+    ]
+  },
+  {
+    "cat": "Epicwin",
+    "title": "Trading Arena-Crypto Simulator",
+    "comment": "",
+    "geo": "NG, ZA, MX",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/jZkx0qF3/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "NG, ZA, MX",
+        "model": "Revshare",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "Ecommerce",
+    "title": "Shein",
+    "comment": "iOS, Android",
+    "geo": "IT, SE, FR, DE, BE, US, GB, ES, RO, MX, CO, ZA, SA",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/YB48PSQF/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "IT, SE, FR, DE, BE, US, GB, ES, RO, MX, CO, ZA, SA",
+        "model": "Revshare",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "Ecommerce",
+    "title": "Amazon",
+    "comment": "iOS",
+    "geo": "IN, US, MX, GB, CA, NL, FR, IT",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/fVscCfhj/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "IN, US, MX, GB, CA, NL, FR, IT",
+        "model": "Revshare",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "Ecommerce",
+    "title": "Shoppee",
+    "comment": "iOS, Android",
+    "geo": "ID, PH, SG, BR, TW, NP, PK",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/B0hHPnQ/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "ID, PH, SG, BR, TW, NP, PK",
+        "model": "Revshare",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "Ecommerce",
+    "title": "Trip.com",
+    "comment": "iOS",
+    "geo": "MY,  HK, TW, TH",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/MytyShGx/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "MY,  HK, TW, TH",
+        "model": "Revshare",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "Ecommerce",
+    "title": "Aliexpress",
+    "comment": "Android",
+    "geo": "WW",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/sStWn64/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "WW",
+        "model": "Revshare",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "bantubet",
+    "comment": "",
+    "geo": "AO",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/dsfzjpLL/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "REG 2 FTD $15",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Rabona , LongFu88,only spins",
+    "comment": "",
+    "geo": "ID, MY, TH, VN, AT, CZ, IT,FI, DE",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/35vDpTF7/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "AT",
+        "model": "",
+        "rate": "350$, DE- 160$, FI - 180$, TH - 89$, MY-50$, VN- 125$, ID - 30$"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "1win",
+    "comment": "",
+    "geo": "IN AR CO",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/Fb5030CH/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "KPI:",
+        "model": "",
+        "rate": ""
+      },
+      {
+        "geo": "IN",
+        "model": "",
+        "rate": "рега - до $1-2, деп - до $40-70"
+      },
+      {
+        "geo": "СL, BR",
+        "model": "",
+        "rate": "рега - до $2-3, деп до $60-70"
+      },
+      {
+        "geo": "AR & CO",
+        "model": "",
+        "rate": "50$ деп, 1.5-2$ рега."
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Onabet",
+    "comment": "",
+    "geo": "BR",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/KptQTmTn/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "KPI dep $20",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "BoraWin",
+    "comment": "",
+    "geo": "AR, BR, SA",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/8LNM1gcQ/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "BR , AR FTD",
+        "model": "",
+        "rate": "30$ ,  SA - 50$"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Leon Gaming",
+    "comment": "",
+    "geo": "TZ \nPT \nRU",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/Hp2mBCjW/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "PT(130$), PL(100$), SE(150$), TZ(20$), IT(140$), TR(50$),KZ (30$), BR (25$)",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Spin City",
+    "comment": "",
+    "geo": "ZM ,LS ,ZW ,NA ,MZ ,SS ,NG ,KE",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/tpM8SXc2/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "ZM ,LS ,ZW ,NA ,MZ ,SS ,NG ,KE",
+        "model": "",
+        "rate": "2- 2,2$"
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "BD808",
+    "comment": "",
+    "geo": "BD",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/zjftDbJ/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "18USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Various",
+    "comment": "",
+    "geo": "BR",
+    "limit": "",
+    "previews": [],
+    "rateCard": [
+      {
+        "geo": "12USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "MAFA191",
+    "comment": "",
+    "geo": "TH",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/N6T1xPq6/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "15 USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Ace",
+    "comment": "",
+    "geo": "ID",
+    "limit": "",
+    "previews": [],
+    "rateCard": [
+      {
+        "geo": "7USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Milo88, PragmaticID",
+    "comment": "",
+    "geo": "ID",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/m594xRJz/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "20USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "N999, F25",
+    "comment": "",
+    "geo": "BD, IN",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/wFZZMmwD/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "7.5 & 9 USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "RW8",
+    "comment": "",
+    "geo": "NP",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/yFM9N483/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "20USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "BB8",
+    "comment": "",
+    "geo": "BD",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/xq3pydgW/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "15USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Jun88",
+    "comment": "",
+    "geo": "ID",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/JjJpLCp2/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "7USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Various",
+    "comment": "",
+    "geo": "MM, BD",
+    "limit": "",
+    "previews": [],
+    "rateCard": [
+      {
+        "geo": "20USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "12bet",
+    "comment": "",
+    "geo": "IN",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/S7R6dcFm/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "60USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Various",
+    "comment": "",
+    "geo": "BR, MX",
+    "limit": "",
+    "previews": [],
+    "rateCard": [
+      {
+        "geo": "Depends on brand",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Pakakumi",
+    "comment": "",
+    "geo": "KE",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/VcFy8ZVb/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "3USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Betking",
+    "comment": "",
+    "geo": "NG",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/0jGZG3F5/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "15USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "Spree",
+    "comment": "",
+    "geo": "US",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/S7dbB3qW/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "100USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  },
+  {
+    "cat": "iGaming",
+    "title": "BetdaSorte",
+    "comment": "",
+    "geo": "BR",
+    "limit": "",
+    "previews": [
+      "https://i.ibb.co/Q3kXtBKv/image.png"
+    ],
+    "rateCard": [
+      {
+        "geo": "25USD FTD",
+        "model": "",
+        "rate": ""
+      }
+    ]
+  }
+];
+
+const bClass={"In-house smartlink":"b-smartlink","Epicwin":"b-epicwin","Ecommerce":"b-ecommerce","iGaming":"b-igaming"};
+const phSvg=`<svg class="thumb-ph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`;
+const phSvgLg=`<svg class="gph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`;
+let curImg=0;
+
+function linkify(t){return t.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank">$1</a>');}
+
+function visibleRc(rc){return (rc||[]).filter(r=>r.rate||r.model);}
+
+function miniRc(rc){
+  const rows=visibleRc(rc);
+  if(!rows.length)return '';
+  return '<table class="rtm">'+rows.map(r=>`<tr><td>${r.geo}</td><td>${r.model}</td><td>${r.rate}</td></tr>`).join("")+'</table>';
+}
+
+function fullRc(rc){
+  const rows=visibleRc(rc);
+  if(!rows.length)return '<div class="no-rates">Рейт-карта уточняется</div>';
+  return `<table class="rtable"><thead><tr><th>Гео</th><th>Модель</th><th>Рейт/КПИ</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.geo}</td><td>${r.model}</td><td>${r.rate}</td></tr>`).join("")}</tbody></table>`;
+}
+
+function renderGrid(cat){
+  const g=document.getElementById("grid");
+  const list=cat==="all"?offers:offers.filter(o=>o.cat===cat);
+  if(!list.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:3rem;color:#aaa;font-size:14px">Нет офферов</div>';return;}
+  g.innerHTML=list.map(o=>{
+    const idx=offers.indexOf(o);
+    const bc=bClass[o.cat]||"b-igaming";
+    const thumb=o.previews.length?`<img src="${o.previews[0]}" loading="lazy" onerror="this.style.display='none'">`:"";
+    const rcMini=miniRc(o.rateCard);
+    return `<div class="card" data-idx="${idx}">
+      <div class="thumb">${thumb}${phSvg}<span class="badge ${bc}">${o.cat}</span></div>
+      <div class="cbody">
+        <div class="ctitle">${o.title}</div>
+        <div class="crow"><span class="cl">Гео</span><span class="cv">${o.geo}</span></div>
+        ${o.limit?`<div class="crow"><span class="cl">Лимит</span><span class="cv">${o.limit}</span></div>`:""}
+        ${rcMini?`<div class="sep"></div>${rcMini}`:""}
+      </div>
+    </div>`;
+  }).join("");
+  g.querySelectorAll(".card").forEach(c=>c.addEventListener("click",()=>openDetail(+c.dataset.idx)));
+}
+
+function openDetail(idx){
+  curImg=0;
+  const o=offers[idx];
+  const bc=bClass[o.cat]||"b-igaming";
+  const imgs=o.previews||[];
+  let imgHtml=imgs.map((src,i)=>`<img src="${src}" class="${i===0?"cur":""}" data-i="${i}" loading="lazy" onerror="this.style.display='none'">`).join("");
+  let navHtml="";
+  if(imgs.length>1){
+    navHtml=`<div class="gnav">
+      <button class="garr" id="gprev">←</button><button class="garr" id="gnext">→</button>
+      ${imgs.map((_,i)=>`<div class="gdot${i===0?" on":""}" data-i="${i}"></div>`).join("")}
+      <span class="gcnt" id="gcnt">1 / ${imgs.length}</span></div>`;
+  }
+  const commentHtml=o.comment?`<div class="dcomment-block">${linkify(o.comment)}</div>`:"";
+  document.getElementById("detailContent").innerHTML=`
+    <div style="margin-bottom:8px"><span class="badge ${bc}" style="position:static;display:inline-block">${o.cat}</span></div>
+    <div class="dtitle">${o.title}</div>
+    <div class="dmeta">
+      <span class="dchip">Гео: ${o.geo}</span>
+      ${o.limit?`<span class="dchip">Лимит: ${o.limit}</span>`:""}
+    </div>
+    ${commentHtml}
+    ${imgs.length?`<div class="gallery"><div class="gimgwrap" id="gimgWrap">${imgHtml}${phSvgLg}</div>${navHtml}</div>`:""}
+    <div class="slabel">Рейт-карта / КПИ</div>${fullRc(o.rateCard)}`;
+  if(imgs.length>1){
+    const allImgs=document.querySelectorAll("#gimgWrap img");
+    const dots=document.querySelectorAll(".gdot");
+    function goTo(n){
+      allImgs[curImg].classList.remove("cur");dots[curImg].classList.remove("on");
+      curImg=n;allImgs[curImg].classList.add("cur");dots[curImg].classList.add("on");
+      document.getElementById("gcnt").textContent=`${curImg+1} / ${imgs.length}`;
+    }
+    document.getElementById("gprev").onclick=()=>goTo((curImg-1+imgs.length)%imgs.length);
+    document.getElementById("gnext").onclick=()=>goTo((curImg+1)%imgs.length);
+    dots.forEach(d=>d.addEventListener("click",()=>goTo(+d.dataset.i)));
+  }
+  document.getElementById("listWrap").classList.add("hide");
+  document.getElementById("detailWrap").classList.add("show");
+  window.scrollTo(0,0);
+}
+document.getElementById("backBtn").addEventListener("click",()=>{
+  document.getElementById("detailWrap").classList.remove("show");
+  document.getElementById("listWrap").classList.remove("hide");
+});
+document.getElementById("filters").addEventListener("click",e=>{
+  const btn=e.target.closest(".fbtn");
+  if(!btn)return;
+  document.querySelectorAll(".fbtn").forEach(b=>b.classList.remove("on"));
+  btn.classList.add("on");
+  renderGrid(btn.dataset.cat);
+});
+renderGrid("all");
+</script>
+</body>
+</html>
